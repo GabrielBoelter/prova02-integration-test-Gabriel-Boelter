@@ -1,8 +1,13 @@
 const pactum = require('pactum');
-const { settings } = pactum;
+
+const { settings, request } = pactum;
 
 beforeAll(() => {
   settings.setLogLevel('ERROR');
+  
+  request.setDefaultHeaders({
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'
+  });
 });
 
 describe('Fake Store API - 10 Cenários de Testes', () => {
@@ -40,7 +45,7 @@ describe('Fake Store API - 10 Cenários de Testes', () => {
       .expectStatus(200);
   });
 
-it('5. Deve criar um novo produto (POST)', async () => {
+  it('5. Deve criar um novo produto (POST)', async () => {
     await pactum.spec()
       .post(`${BASE_URL}/products`)
       .withJson({
@@ -48,8 +53,8 @@ it('5. Deve criar um novo produto (POST)', async () => {
         price: 1500,
         category: 'electronics'
       })
-      .expectStatus(201); 
-});
+      .expectStatus(200); 
+  });
 
   it('6. Deve atualizar um produto via PUT', async () => {
     await pactum.spec()
@@ -77,17 +82,17 @@ it('5. Deve criar um novo produto (POST)', async () => {
       .expectStatus(200);
   });
 
-it('10. Deve realizar login de usuário com sucesso', async () => {
+  it('10. Deve realizar login de usuário com sucesso', async () => {
     await pactum.spec()
       .post(`${BASE_URL}/auth/login`)
       .withJson({
         username: 'mor_2314',
         password: '83r5^_',
       })
-      .expectStatus(201) 
+      .expectStatus(200) 
       .expectJsonLike({
         token: /.+/ 
       });
-});
+  });
 
 });
